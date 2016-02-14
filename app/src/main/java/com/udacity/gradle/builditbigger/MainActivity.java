@@ -2,17 +2,17 @@ package com.udacity.gradle.builditbigger;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.udacity.gradle.builditbigger.jokeactivity.JokeActivity;
-import com.udacity.gradle.builditbigger.jokes.Joker;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.EndpointsAsyncResponse {
+
+    private EndpointsAsyncTask mEndpointsAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,13 +43,30 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void tellJoke(View view){
-        Joker joker = new Joker();
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        endAsyncTask();
+    }
 
+    public void tellJoke(View view) {
+        endAsyncTask();
+        mEndpointsAsyncTask = new EndpointsAsyncTask(this);
+        mEndpointsAsyncTask.execute(this);
+    }
+
+    @Override
+    public void processFinish(String result) {
         Intent intent = new Intent(this, JokeActivity.class);
-        intent.putExtra(JokeActivity.JOKE_KEY, joker.getJoke());
+        intent.putExtra(JokeActivity.JOKE_KEY, result);
         startActivity(intent);
     }
 
 
+    private void endAsyncTask() {
+        if (mEndpointsAsyncTask != null) {
+            mEndpointsAsyncTask.onDelegateDestroyed();
+            mEndpointsAsyncTask = null;
+        }
+    }
 }
