@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.udacity.gradle.builditbigger.jokeactivity.JokeActivity;
+import com.udacity.gradle.builditibigger.backend.myApi.MyApi;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -18,6 +21,7 @@ public class MainActivityFragment extends Fragment implements EndpointsAsyncTask
 
     private ProgressBar mLoadingBar;
     private EndpointsAsyncTask mEndpointsAsyncTask = null;
+    private MyApi mApiService;
 
     public MainActivityFragment() {
     }
@@ -37,6 +41,11 @@ public class MainActivityFragment extends Fragment implements EndpointsAsyncTask
             }
         });
 
+        mApiService = new MyApi
+                .Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
+                .setRootUrl(MainActivity.ROOT_URL)
+                .build();
+
         return root;
     }
 
@@ -49,7 +58,7 @@ public class MainActivityFragment extends Fragment implements EndpointsAsyncTask
     public void tellJoke() {
         endAsyncTask();
         mLoadingBar.setVisibility(View.VISIBLE);
-        mEndpointsAsyncTask = new EndpointsAsyncTask(this);
+        mEndpointsAsyncTask = new EndpointsAsyncTask(this, mApiService);
         mEndpointsAsyncTask.execute();
     }
 
