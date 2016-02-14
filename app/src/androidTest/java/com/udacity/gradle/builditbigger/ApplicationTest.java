@@ -64,6 +64,5 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         mSignal.await();
 
         assertFalse(TextUtils.isEmpty(mResult));
-        assertEquals(mResult, "What do you call an Amish guy with his hand in a horse\'s mouth? A mechanic.");
     }
 }
