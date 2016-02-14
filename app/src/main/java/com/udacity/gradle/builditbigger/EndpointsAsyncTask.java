@@ -1,6 +1,5 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -14,7 +13,7 @@ import java.io.IOException;
 /**
  * AsyncTask to get joke from API
  */
-class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
+class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
 
     // 10.0.2.2 is localhost's IP address in Android emulator
     private static final String ROOT_URL = "http://10.0.2.2:8080/_ah/api/";
@@ -28,7 +27,7 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
     }
 
     @Override
-    protected final String doInBackground(Context... params) {
+    protected final String doInBackground(Void... params) {
 
         // Initialize service once if it hasn't been initialized yet
         if (myApiService == null) {
