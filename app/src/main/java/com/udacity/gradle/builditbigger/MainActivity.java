@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.udacity.gradle.builditbigger.jokeactivity.JokeActivity;
 
@@ -13,11 +14,14 @@ import com.udacity.gradle.builditbigger.jokeactivity.JokeActivity;
 public class MainActivity extends AppCompatActivity implements EndpointsAsyncTask.EndpointsAsyncResponse {
 
     private EndpointsAsyncTask mEndpointsAsyncTask;
+    private ProgressBar mLoadingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mLoadingBar = (ProgressBar) findViewById(R.id.loading);
     }
 
 
@@ -51,12 +55,14 @@ public class MainActivity extends AppCompatActivity implements EndpointsAsyncTas
 
     public void tellJoke(View view) {
         endAsyncTask();
+        mLoadingBar.setVisibility(View.VISIBLE);
         mEndpointsAsyncTask = new EndpointsAsyncTask(this);
         mEndpointsAsyncTask.execute(this);
     }
 
     @Override
     public void processFinish(String result) {
+        mLoadingBar.setVisibility(View.GONE);
         Intent intent = new Intent(this, JokeActivity.class);
         intent.putExtra(JokeActivity.JOKE_KEY, result);
         startActivity(intent);
